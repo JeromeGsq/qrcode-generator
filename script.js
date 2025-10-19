@@ -1,7 +1,7 @@
 // Éléments DOM
 const linkInput = document.getElementById('linkInput');
 const generateBtn = document.getElementById('generateBtn');
-const qrCanvas = document.getElementById('qrCanvas');
+const qrCodeContainer = document.getElementById('qrCodeContainer');
 const copyBtn = document.getElementById('copyBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 const actionButtons = document.getElementById('actionButtons');
@@ -27,11 +27,13 @@ function generateQRCode() {
         return;
     }
 
+    // Réinitialiser l'état
     currentLink = link;
+    currentQRCode = null;
+    actionButtons.style.display = 'none';
 
     // Nettoyer le conteneur
-    const container = qrCanvas.parentElement;
-    container.innerHTML = '<div id="qrcode"></div>';
+    qrCodeContainer.innerHTML = '<div id="qrcode"></div>';
 
     // Créer le QR code avec la librairie QRCode.js
     const qrcode = new QRCode(document.getElementById('qrcode'), {
@@ -129,6 +131,14 @@ function downloadAsJPG() {
     }, 'image/jpeg', 0.95);
 }
 
+// Fonction pour réinitialiser l'affichage
+function resetDisplay() {
+    currentQRCode = null;
+    currentLink = '';
+    actionButtons.style.display = 'none';
+    qrCodeContainer.innerHTML = '';
+}
+
 // Événements
 generateBtn.addEventListener('click', generateQRCode);
 linkInput.addEventListener('keypress', (e) => {
@@ -136,5 +146,6 @@ linkInput.addEventListener('keypress', (e) => {
         generateQRCode();
     }
 });
+linkInput.addEventListener('input', resetDisplay);
 copyBtn.addEventListener('click', copyToClipboard);
 downloadBtn.addEventListener('click', downloadAsJPG);
